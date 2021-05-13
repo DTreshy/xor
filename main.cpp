@@ -215,7 +215,70 @@ void addBeforePrev(Node *head, Node *actual, Node **actual_ref, int data)
   new_node->npx = XOR(prev, curr);
   curr->npx = XOR(new_node, next);
 }
+
+void deleteBeg(Node **head_ref) {
+  if(*head_ref != NULL) {
+    Node* temp = *head_ref;
+    *head_ref = XOR(NULL, temp->npx);
+    if (*head_ref != NULL) {
+          // Update head node address
+          (*head_ref)->npx = XOR(NULL, XOR(temp, (*head_ref)->npx));
+        }
+    free(temp);
+  }
+}
  
+void deleteEnd(Node **head_ref) {
+{
+  Node *curr = *head_ref;
+  Node *prev = NULL;
+  Node *next;
+
+    if (*head_ref != NULL)
+        while (XOR(curr->npx, prev) != NULL) {
+            next = XOR(prev, curr->npx);
+            prev = curr;
+            curr = next;
+        }
+        if (prev != NULL)
+            prev->npx = XOR(XOR(prev->npx, curr), NULL);
+        else
+            *head_ref = NULL;
+        free(curr);
+    }
+}
+
+void deleteVal(Node **head_ref, int data) {
+  Node *curr = *head_ref;
+  Node *prev = NULL;
+  Node *next;
+  
+  if(*head_ref != NULL) {
+    while (XOR(curr->npx, prev) != NULL) {
+      next = XOR(prev, curr->npx);
+      if(curr->data == data) {
+        Node* temp = curr;
+        if(temp == *head_ref) {
+          *head_ref = next;
+          if (*head_ref != NULL) {
+            // Update head node address
+            (*head_ref)->npx = XOR(NULL, XOR(temp, (*head_ref)->npx));
+          }
+          curr = *head_ref;
+          prev = NULL;
+          free(temp);
+        }
+        else {
+          
+        }
+      }
+
+      prev = curr;
+      curr = next;
+    }
+  }
+}
+
 int main()
 {
   Node *head = NULL;
@@ -253,5 +316,9 @@ int main()
       cin >> data;
       addBeforePrev(head, actual, &actual, data);
     }
+    else if (command.compare("DEL_BEG") == 0)
+      deleteBeg(&head);
+    else if (command.compare("DEL_END") == 0)
+      deleteEnd(&head);
   }
 }
